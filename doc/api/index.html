@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 0.42.0">
+  <meta name="description" content="class_to_map API docs, for the Dart programming language.">
+  <title>class_to_map - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+
+  
+</head>
+
+
+<body data-base-href=""
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/EddieKamau/class_to_map">class_to_map package</a></li>
+  </ol>
+  <div class="self-name">class_to_map</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="https://github.com/EddieKamau/class_to_map">class_to_map package</a></li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">class_to_map</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="class_to_map/class_to_map-library.html">class_to_map</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <p>This package provides two extesions, for converting a class to Map&lt;String, dynamic&gt; and vice versa</p>
+<h2 id="usage">Usage</h2>
+<pre class="language-dart"><code class="language-dart">import 'package:class_to_map/class_to_map.dart';
+
+// Simple class
+class Test {
+    String val1 = "value 1";
+    int val2 = 2;
+    Map val3 = {"a": "another value"};
+  }
+
+// Complex class
+class Person {
+  String name = 'person';
+  int age = 30;
+  Adress adress = Adress('email@mail.mail', '254700000000');
+  List&lt;Child&gt; children = [
+    Child("child 1", 5),
+    Child("child 2", 1),
+  ];
+}
+
+// A class with required positional arguments
+class Adress {
+  Adress(this.email, this.phoneNo);
+  String phoneNo;
+  String email;
+}
+
+class Child {
+  Child(this.name, this.age);
+  String name;
+  int age;
+}
+
+void main() {
+</code></pre>
+<h2 id="converting-a-simple-class">Converting a simple class</h2>
+<pre class="language-dart"><code class="language-dart">  // coverting a simple class
+  print(Test().toMap());
+
+  Map&lt;String, dynamic&gt; _testMap = {
+    "val1": 'value 1',
+    "val2": 2,
+    "val3": {"a": "another value"} 
+  };
+
+  // converting a map to a simple class
+  print(_testMap.toClass&lt;Test&gt;().val1);
+
+</code></pre>
+<h2 id="converting-a-map-to-a-class-with-required">converting a map to a class with required</h2>
+<pre class="language-dart"><code class="language-dart">  // converting a map to a class with required arguments
+  Adress _adressTest= {
+    "phoneNo": '254700000000', 
+    "email": 'email@mail.mail'
+  }.toClass&lt;Adress&gt;(positionalArguments: ['', '']);
+  print(_adressTest.email);
+</code></pre>
+<h2 id="converting-a-complex-class-to-map">converting a complex class to map</h2>
+<pre class="language-dart"><code class="language-dart">  // converting a complex class to map
+  final Person person = Person();
+  print(person.toMap());
+
+  Map&lt;String, dynamic&gt; personMap = {
+    "name": 'person', 
+    "age": 30, 
+    "adress": {
+      "phoneNo": '254700000000', 
+      "email": 'email@mail.mail'
+    }, 
+    "children": [
+      {"name": 'child 1', "age": 5}, 
+      {"name": 'child 2', "age": 1}]
+  };
+
+  // map to class 
+  Person _person = personMap.map((key, value) {
+    if(key == 'adress'){
+      return MapEntry(key, (value as Map&lt;String, dynamic&gt;?)?.toClass&lt;Adress&gt;(positionalArguments: ['', '']));
+    }else if(key == "children"){
+      List&lt;Child&gt;? _value = (value as List&lt;Map&lt;String, dynamic&gt;&gt;?)?.map((element) =&gt; element.toClass&lt;Child&gt;(positionalArguments: ['', 0])).toList();
+      return MapEntry(key, _value);
+
+    } else{
+      return MapEntry(key, value);
+    }
+  }).toClass&lt;Person&gt;();
+  print(_person.name);
+
+  
+}
+</code></pre>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="class_to_map">
+  <span class="name"><a href="class_to_map/class_to_map-library.html">class_to_map</a></span> 
+
+</dt>
+<dd>This packages provides two extensions, for converting a class to a Map<string dynamic=""> &amp; vice versa
+for example</string> <a href="class_to_map/class_to_map-library.html">[...]</a>
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    class_to_map
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/script.js"></script>
+
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the toMap method from the ClassToMapExtension extension, for the Dart programming language.">
+  <title>toMap method - ClassToMapExtension extension - class_to_map library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../../static-assets/github.css">
+  <link rel="stylesheet" href="../../static-assets/styles.css">
+  <link rel="icon" href="../../static-assets/favicon.png">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">class_to_map</a></li>
+    <li><a href="../../class_to_map/class_to_map-library.html">class_to_map</a></li>
+    <li><a href="../../class_to_map/ClassToMapExtension.html">ClassToMapExtension</a></li>
+    <li class="self-crumb">toMap method</li>
+  </ol>
+  <div class="self-name">toMap</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">class_to_map</a></li>
+  <li><a href="../../class_to_map/class_to_map-library.html">class_to_map</a></li>
+  <li><a href="../../class_to_map/ClassToMapExtension.html">ClassToMapExtension</a></li>
+  <li class="self-crumb">toMap method</li>
+</ol>
+
+
+    <h5>ClassToMapExtension extension</h5>
+    <ol>
+
+
+
+
+
+    <li class="section-title"><a href="../../class_to_map/ClassToMapExtension.html#instance-methods">Methods</a></li>
+    <li><a href="../../class_to_map/ClassToMapExtension/toMap.html">toMap</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">toMap</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.13.1/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.13.1/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
+<span class="name ">toMap</span>(<wbr>)
+
+      
+
+    </section>
+    
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Map&lt;String, dynamic&gt; toMap() {
+  final Map&lt;String, dynamic&gt; _finalMap = {};
+  final InstanceMirror im = reflect(this);
+
+  Map&lt;String, dynamic&gt; process(InstanceMirror instanceMirror) {
+    Map&lt;String, dynamic&gt; _map = {};
+    final ClassMirror _classMirror = instanceMirror.type;
+
+    Map&lt;String, dynamic&gt; processClassMirror(InstanceMirror instanceMirror,
+        ClassMirror classMirror, Map&lt;String, dynamic&gt; map) {
+      classMirror.declarations.values.forEach((item) {
+        if (item is VariableMirror) {
+          &#47;&#47; get the variable name
+          final String name = MirrorSystem.getName(item.simpleName);
+
+          &#47;&#47; if value is list
+          if (item.type.toString().contains(&quot;on &#39;List&#39;&quot;)) {
+            final List _lst = [];
+            (instanceMirror.getField(item.simpleName).reflectee as List?)
+                ?.forEach((element) {
+              &#47;&#47; check if value is a class
+              if (instanceMirror
+                  .getField(item.simpleName)
+                  .reflectee
+                  .toString()
+                  .contains(&quot;Instance of &quot;)) {
+                &#47;&#47; convert the class to Map
+                _lst.add(process(reflect(element)));
+              } else {
+                _lst.add(element);
+              }
+              _map[name] = _lst;
+            });
+
+            &#47;&#47; if value is map
+          } else if (item.type.toString().contains(&quot;on &#39;Map&#39;&quot;)) {
+            final Map _newMap = {};
+            (instanceMirror.getField(item.simpleName).reflectee as Map?)
+                ?.forEach((k, v) {
+              &#47;&#47; check if value is a class
+              if (instanceMirror
+                  .getField(item.simpleName)
+                  .reflectee
+                  .toString()
+                  .contains(&quot;Instance of &quot;)) {
+                &#47;&#47; convert the class to Map
+                _newMap[k] = process(reflect(v));
+              } else {
+                _newMap[k] = v;
+              }
+            });
+            map[name] = _newMap;
+          } else {
+            &#47;&#47; check if value is a class
+            if (instanceMirror
+                .getField(item.simpleName)
+                .reflectee
+                .toString()
+                .contains(&quot;Instance of &quot;)) {
+              final InstanceMirror _nestedIm =
+                  reflect(instanceMirror.getField(item.simpleName).reflectee);
+              &#47;&#47; convert the nested class to Map
+              map[name] = process(_nestedIm);
+            } else if (!item.isPrivate) {
+              &#47;&#47; get the value of the variable
+              map[name] = instanceMirror.getField(item.simpleName).reflectee;
+            }
+          }
+        }
+      });
+      return map;
+    }
+
+    return processClassMirror(instanceMirror, _classMirror, _map);
+  }
+
+  _finalMap.addAll(process(im));
+  return _finalMap;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    class_to_map
+      0.0.1
+  </span>
+
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js"></script>
+<script src="../../static-assets/script.js"></script>
+
+
+
+</body>
+
+</html>
+

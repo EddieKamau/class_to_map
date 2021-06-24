@@ -1,0 +1,15 @@
+name: class_to_map
+description: This package provides two extesions, for converting a class to Map<String, dynamic> and vice versa.
+version: 0.0.1
+homepage: https://github.com/EddieKamau/class_to_map
+repository: https://github.com/EddieKamau/class_to_map
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+# dependencies:
+#   path: ^1.8.0
+
+dev_dependencies:
+  pedantic: ^1.10.0
+  test: ^1.16.0
